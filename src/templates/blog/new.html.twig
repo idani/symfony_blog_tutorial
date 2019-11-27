@@ -1,14 +1,21 @@
 {# app/Resources/views/blog/new.html.twig #}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% extends 'base.html.twig' %}
-
-{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block page_title '新規作成' %}
 
 {% block content %}
+	{# {{ form(form, {'save': {'label': 'submit me'}}) }} #}
+
 	{{ form_start(form) }}
-	{{ form_widget(form) }}
-	<button type="submit" class="btn btn-primary">作成</button>
+	{{ form_errors(form) }}
+
+	{{ form_row(form.title) }}
+	{{ form_row(form.content) }}
+
+	{{ form_row(form.save, { 'label': '作成する' }) }}
 	{{ form_end(form) }}
+
+
 {% endblock content %}

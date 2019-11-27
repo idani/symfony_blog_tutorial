@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Post;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Form\Type\PostType;
 use Symfony\Component\HttpFoundation\Request;
 
 class BlogController extends AbstractController
@@ -45,11 +45,7 @@ class BlogController extends AbstractController
     public function new(Request $request)
     {
         $post = new Post();
-        $form = $this->createFormBuilder($post)
-            ->add('title')
-            ->add('content')
-            ->add('save', SubmitType::class, ['label' => '作成する'])
-            ->getForm();
+        $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
