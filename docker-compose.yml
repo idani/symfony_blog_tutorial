@@ -26,7 +26,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data-symfony-tutorial:/var/lib/mysql
+      - mysql-data-symfony-blog-tutorial:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/cyfons.cnf
       - ./logs:/var/log/mysql2
     env_file: .env
@@ -63,7 +63,7 @@ services:
 volumes:
   # node-data:
   #   driver: local
-  mysql-data-symfony-tutorial:
+  mysql-data-symfony-blog-tutorial:
     driver: local
   phpmyadminSession:
     driver: local
