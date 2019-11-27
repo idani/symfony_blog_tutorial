@@ -6,15 +6,19 @@
 {% block page_title '新規作成' %}
 
 {% block content %}
-	{# {{ form(form, {'save': {'label': 'submit me'}}) }} #}
+	{# {{ form(form) }} #}
 
 	{{ form_start(form) }}
-	{{ form_errors(form) }}
+	{# {{ form_errors(form) }} #}
 
-	{{ form_row(form.title) }}
-	{{ form_row(form.content) }}
+	{{ form_row(form.title, {'label': 'タイトル'}) }}
+	{{ form_row(form.content, {'label': '本文'}) }}
 
-	{{ form_row(form.save, { 'label': '作成する' }) }}
+	{% if post.id %}
+		{{ form_row(form.save, { 'label': '編集する' }) }}
+	{% else %}
+		{{ form_row(form.save, { 'label': '作成する' }) }}
+	{% endif %}
 	{{ form_end(form) }}
 
 

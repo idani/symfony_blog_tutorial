@@ -12,12 +12,13 @@
 
 	<div class="row">
 		{% if posts | length > 0 %}
-			<table class="table table-bordered table-dark">
+			<table class="table table-bordered">
 				<thead>
 					<tr>
 						<th scope="col">ID</th>
 						<th scope="col">タイトル</th>
 						<th scope="col">作成日</th>
+						<th scope="col">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -29,6 +30,10 @@
 							</td>
 							<td>{{ post.title }}</td>
 							<td>{{ post.createdAt|date('Y/m/d H:i') }}</td>
+							<td>
+								<a class="btn btn-info" href="{{ path('blog_edit', {id: post.id}) }}">編集</a>
+								<a class="btn btn-danger" href="{{ path('blog_delete', {id: post.id}) }}">削除</a>
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>

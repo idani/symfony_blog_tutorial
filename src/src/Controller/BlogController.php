@@ -62,4 +62,60 @@ class BlogController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/blog/{id}/delete", name="blog_delete", requirements={"id"="\d+"})
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function delete($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $post = $em->getRepository(Post::class)->find($id);
+        if (!$post) {
+            throw $this->createNotFoundException(
+                'No post found for id ' . $id
+            );
+        }
+
+
+        // 削除処理
+        $em->remove($post);
+        $em->flush();
+
+        return $this->redirectToRoute('blog');
+    }
+
+    /**
+     * @Route("/blog/{id}/edit", name="blog_edit", requirements={"id"="\d+"})
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function edit($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $post = $em->getRepository(Post::class)->find($id);
+        if (!$post) {
+            throw $this->createNotFoundException(
+                'No post found for id ' . $id
+            );
+        }
+
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setUpdatedAt(new \DateTime());
+            $em->flush();
+
+            return $this->redirectToRoute('blog');
+        }
+
+        return $this->render('blog/new.html.twig', [
+            'post' => $post,
+            'form' => $form->createView()
+        ]);
+    }
 }
