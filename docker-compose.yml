@@ -1,0 +1,73 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./docker/web/Dockerfile
+    # image: php:7.1-apache
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8000:8000" # Roadrunner PHP application server (optional)
+    # depends_on:
+    #   - php
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/web/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/web/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./docker/web/msmtprc:/etc/msmtprc
+      - ./logs:/var/log/apache2
+  db:
+    # image: mysql:5.7
+    # image: mariadb:5.5-trusty
+    image: mariadb/server:10.3
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data-symfony-tutorial:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/cyfons.cnf
+      - ./logs:/var/log/mysql2
+    env_file: .env
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+    ports:
+      - 8033:80
+    volumes:
+      - "phpmyadminSession:/sessions"
+
+    # redis:
+    #   image: redis:3-alpine
+
+  #   mailhog:
+  #     image: mailhog/mailhog
+  #     ports:
+  #       - "8082:8025"
+
+  maildev:
+    image: kanemu/maildev-with-iconv
+    ports:
+      - 8025:80
+
+  # webdriver:
+  #   image: selenium/standalone-chrome
+  #   volumes:
+  #     - /dev/shm:/dev/shm
+
+volumes:
+  # node-data:
+  #   driver: local
+  mysql-data-symfony-tutorial:
+    driver: local
+  phpmyadminSession:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
